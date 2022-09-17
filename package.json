@@ -1,0 +1,24 @@
+{
+  "name": "sobczykssqlteamtracker",
+  "version": "1.0.0",
+  "description": "SQL Team Tracker using node and command line",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sobe1290/SobczyksSQLTeamTracker.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sobe1290/SobczyksSQLTeamTracker/issues"
+  },
+  "homepage": "https://github.com/sobe1290/SobczyksSQLTeamTracker#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^9.1.1",
+    "mysql2": "^2.3.3"
+  }
+}
