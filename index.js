@@ -20,13 +20,6 @@ db.query('SELECT (Insert something) FROM (insert something)', function (err, res
   console.log(results);
 });
 
-app.use((req, res) => {
-  res.status(404).end();
-});
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
 
 inquirer
   .prompt(mainMenu)
