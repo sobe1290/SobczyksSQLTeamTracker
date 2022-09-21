@@ -25,6 +25,13 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
+inquirer
+  .prompt(mainMenu)
+  .then(answers =>
+    nextQuestion(answers)
+        
+    )
+
 
 
 
