@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "SQL Team Tracker using node and command line",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

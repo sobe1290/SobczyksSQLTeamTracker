@@ -1,41 +1,31 @@
-const inquirer = require('inquirer');
-const cTable = require('console.table');
-const mysql = require('mysql2');
+import inquirer from 'inquirer';
+import * as mysql from 'mysql2';
+import {nextQuestion, mainMenu} from './js/prompts.js';
+import {schema} from './js/schema.js';
+import {seeds} from './js/seeds.js';
 
 
-
-
-
-const db = mysql.createConnection(
+export const db = mysql.createConnection(
   {
     host: 'localhost',
     user: 'root',
-    password: '',
-    database: 'team_db'
+    password: 'LMHEm6ND6aLA#B6X',
+    database: 'team_db',
   },
   console.log(`Connected to the team_db database.`)
 );
 
-db.query('SELECT (Insert something) FROM (insert something)', function (err, results) {
-  console.log(results);
-});
+db.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
+    startQuestions();
+  });
 
-
+export function startQuestions() {
 inquirer
   .prompt(mainMenu)
   .then(answers =>
     nextQuestion(answers)
         
-    )
-
-
-
-
-// async function main() {
-//     // get the client
-//     const mysql = require('mysql2/promise');
-//     // create the connection
-//     const connection = await mysql.createConnection({host:'localhost', user: 'root', database: 'test'});
-//     // query database
-//     const [rows, fields] = await connection.execute('SELECT * FROM `table` WHERE `name` = ? AND `age` > ?', ['Morty', 14]); //This is an example, change this.
-//   }
+    );
+  };

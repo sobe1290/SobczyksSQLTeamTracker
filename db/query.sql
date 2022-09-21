@@ -13,6 +13,8 @@ LEFT JOIN employee ON employee.role_id = role.id
 LEFT JOIN employee manager ON manager.id = employee.manager_id
 ORDER BY employee.id;
 
-
+UPDATE employee
+SET first_name=?, last_name=?, role_id=?, manager_id=? 
+WHERE employee.id=?
 
 
