@@ -17,12 +17,12 @@ function viewAllEmployees () {
 };
 
 function addEmployee () {
-    db.query(`INSERT INTO role (title, salary, department_id) VALUES  (${enteredTitle}, ${enteredSalary}, ${enteredDepartment_id} )`, function (err, results) {
+    db.query(`INSERT INTO role (title, salary, department_id) VALUES  (?,?,?)`, [enteredTitle, enteredSalary, enteredDepartment_id], function (err, results) {
       });
 
 }
 
 function addDepartment () {
-    db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES  ("${enteredFirst_Name}", "${enteredLast_Name}", ${enteredRole_id}, ${enteredManager_id})`, function (err, results) {
+    db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES  (?,?,?)`, [enteredFirst_Name, enteredLast_Name, enteredRole_id, enteredManager_id], function (err, results) {
       });
 }
