@@ -1,4 +1,4 @@
-SELECT *
+SELECT role.id, role.title, role.salary, role.department_id
 FROM role
 JOIN department ON role.department_id = department.id;
 
