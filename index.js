@@ -160,7 +160,7 @@ function nextQuestion (answers) {
           }, 1000);
           break;
       case 'Add Employee':
-        rolePromise(roleArray).then(data =>
+        getRole().then(
             inquirer
             .prompt(addEmployeeQuestions)
             .then(answers =>{
@@ -226,15 +226,10 @@ function nextQuestion (answers) {
   }
 }
 
-const rolePromise = () => {
-    return new Promise((resolve, reject) => {
-        db.query('SELECT role.title FROM role;', function (err, results) {                
-              return data 
+async function getRole () {
+        await db.promise().query('SELECT role.title FROM role;', function (err, results) {                
+            return results
           })
-          console.log(data);
-            resolve(data);
-    
-})
-}
+          results.map((roles) => roleArray.push(roles.title)) 
+          }
 
-results.map((roles) => roleArray.push(roles.title)) 
