@@ -1,13 +1,9 @@
 const inquirer = require('inquirer');
+const mysql = require('mysql2');
 
-main();
-
-async function main () {
-
-const mysql = require('mysql2/promise');
 
 // This part sets up the connection
-const db = await mysql.createConnection(
+const db = mysql.createConnection(
   {
     host: 'localhost',
     user: 'root',
@@ -17,7 +13,7 @@ const db = await mysql.createConnection(
 );
 
 //This part starts the connection and the inquirer questions
-await db.connect(function(err) {
+db.connect(function(err) {
   console.log(`"Connected!"\n
   
   #####                                           ###            #####   #####  #       
@@ -164,13 +160,8 @@ function nextQuestion (answers) {
           }, 1000);
           break;
       case 'Add Employee':
-        db.promise().query('SELECT role.title FROM role;', function (err, results) {                
-          results.map((roles) => roleArray.push(roles.title))  
-          console.log(roleArray); //This console log properly returns the array of roles
-          return roleArray 
-        })
-        .then(
-        inquirer
+        rolePromise(roleArray).then(data =>
+            inquirer
             .prompt(addEmployeeQuestions)
             .then(answers =>{
                 const enteredFirst_Name = answers.employee_first_name;
@@ -234,4 +225,16 @@ function nextQuestion (answers) {
           break;
   }
 }
+
+const rolePromise = () => {
+    return new Promise((resolve, reject) => {
+        db.query('SELECT role.title FROM role;', function (err, results) {                
+              return data 
+          })
+          console.log(data);
+            resolve(data);
+    
+})
 }
+
+results.map((roles) => roleArray.push(roles.title)) 
