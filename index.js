@@ -161,26 +161,26 @@ function nextQuestion (answers) {
           break;
       case 'Add Employee':
         db.query('SELECT role.title FROM role;', function (err, results) {                
-            results.map((roles) => roleArray.push(roles.title)) 
-            
+            results.map((roles) => roleArray.push(roles.title))             
             return roleArray
-          })
-          
-          
-
-            inquirer
-            .prompt(addEmployeeQuestions)
-            .then(answers =>{
-                const enteredFirst_Name = answers.employee_first_name;
-                const enteredLast_Name = answers.employee_last_name;
-                const enteredRole = answers.emp_role;
-                const enteredManager_id = answers.manager_id;
-                db.query(`INSERT INTO employee (first_name, last_name, manager_id) VALUES  (?,?,?,?);`, [enteredFirst_Name, enteredLast_Name, enteredRole, enteredManager_id], function (err, results) {});
-                db.query(`INSERT INTO role (title) VALUES (?)`, [enteredRole], function (err, results) {});
-                setTimeout(() => {
-                    startQuestions();
-                }, 1000);
-            })
+          })   
+        inquirer
+        .prompt(addEmployeeQuestions)
+        .then(answers =>{
+            const enteredFirst_Name = answers.employee_first_name;
+            const enteredLast_Name = answers.employee_last_name;
+            const enteredRole = answers.emp_role;
+            const enteredManager_id = answers.manager_id;
+            db.query(`INSERT INTO employee (first_name, last_name, manager_id) VALUES  (?,?,?);`, [enteredFirst_Name, enteredLast_Name, enteredManager_id], function (err, results) {
+                console.log(results)
+            });
+            db.query(`INSERT INTO role (title) VALUES (?);`, [enteredRole], function (err, results) {
+                console.log(results)
+            });
+            setTimeout(() => {
+                startQuestions();
+            }, 1000);
+        })
         
           
         
@@ -234,10 +234,5 @@ function nextQuestion (answers) {
   }
 }
 
-function addInitialization () {
 
-    
-        
-          
-          }
 
