@@ -160,7 +160,13 @@ function nextQuestion (answers) {
           }, 1000);
           break;
       case 'Add Employee':
-        getRole().then(
+        db.query('SELECT role.title FROM role;', function (err, results) {                
+            results.map((roles) => roleArray.push(roles.title)) 
+            console.log(roleArray)
+            return roleArray
+          })
+          console.log(roleArray)
+
             inquirer
             .prompt(addEmployeeQuestions)
             .then(answers =>{
@@ -174,7 +180,7 @@ function nextQuestion (answers) {
                     startQuestions();
                 }, 1000);
             })
-        )
+        
           
         
           break;
@@ -227,9 +233,7 @@ function nextQuestion (answers) {
 }
 
 async function getRole () {
-        await db.promise().query('SELECT role.title FROM role;', function (err, results) {                
-            return results
-          })
-          results.map((roles) => roleArray.push(roles.title)) 
+        
+          
           }
 
