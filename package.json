@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "SQL Team Tracker using node and command line",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,7 +18,7 @@
   "homepage": "https://github.com/sobe1290/SobczyksSQLTeamTracker#readme",
   "dependencies": {
     "console.table": "^0.10.0",
-    "inquirer": "^9.1.1",
+    "inquirer": "^8.0.0",
     "mysql2": "^2.3.3"
   }
 }
