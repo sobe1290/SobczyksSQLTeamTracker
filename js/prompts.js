@@ -114,6 +114,11 @@ export function nextQuestion (answers) {
             }, 1000);
             break;
         case 'Add Employee':
+            db.query('SELECT role.title FROM role;', function (err, results) {
+                const roleArray = results.values()???????????             
+                console.log(roleArray);
+              });
+
             inquirer
                 .prompt(addEmployeeQuestions)
                 .then(answers =>{
