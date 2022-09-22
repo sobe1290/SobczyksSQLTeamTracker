@@ -10,28 +10,7 @@ export const mainMenu = [
     },
 ]
 
-const addEmployeeQuestions = [
-    {
-        type:'input',
-        name: 'employee_first_name',
-        message: 'What is this employees first name?',
-    },
-    {
-        type:'input',
-        name: 'employee_last_name',
-        message: 'What is this employees last name?'
-    },
-    {
-        type:'number',
-        name: 'role_id',
-        message: 'What is the role id number of this employee?'
-    },
-    {
-        type:'number',
-        name: 'manager_id',
-        message: 'What is id number of the manager for this employee?'
-    }
-]
+
 
 const addRoleQuestions = [
     {
@@ -58,6 +37,9 @@ const addDepartmentQuestion = [
         message: 'What is the name of this Department?',
     }
 ]
+
+
+
 
 const updateEmployeeIDQuestions = [
     {
@@ -114,25 +96,7 @@ export function nextQuestion (answers) {
             }, 1000);
             break;
         case 'Add Employee':
-            db.query('SELECT role.title FROM role;', function (err, results) {
-                const roleArray = results.values()???????????             
-                console.log(roleArray);
-              });
-
-            inquirer
-                .prompt(addEmployeeQuestions)
-                .then(answers =>{
-                    const enteredFirst_Name = answers.employee_first_name;
-                    const enteredLast_Name = answers.employee_last_name;
-                    const enteredRole_id = answers.role_id;
-                    const enteredManager_id = answers.manager_id;
-                    db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES  (?,?,?,?);`, [enteredFirst_Name, enteredLast_Name, enteredRole_id, enteredManager_id], function (err, results) {
-                    });
-                    setTimeout(() => {
-                        startQuestions();
-                    }, 1000);
-                })
-            
+            addNewEmployee();
             break;
         case 'Add Role':
             inquirer
@@ -182,6 +146,54 @@ export function nextQuestion (answers) {
     }
 }
 
+  
 
-  
-  
+
+
+  function addNewEmployee () {
+     const addEmployeeQuestions = [
+        {
+            type:'input',
+            name: 'employee_first_name',
+            message: 'What is this employees first name?',
+        },
+        {
+            type:'input',
+            name: 'employee_last_name',
+            message: 'What is this employees last name?',
+        },
+        {
+            type:'choices',
+            name: 'emp_role',
+            message: 'What is the role of this employee?',
+            choices: roleArray,
+        },
+        {
+            type:'number',
+            name: 'manager_id',
+            message: 'What is id number of the manager for this employee?',
+            
+        }
+    ]
+    const roleArray = [];
+   
+    
+    db.query('SELECT role.title FROM role;', function (err, results) {                
+        results.map((roles) => roleArray.push(roles.title))  
+        .then(inquirer
+            .prompt(addEmployeeQuestions)
+            .then(answers =>{
+                const enteredFirst_Name = answers.employee_first_name;
+                const enteredLast_Name = answers.employee_last_name;
+                const enteredRole = answers.emp_role;
+                const enteredManager_id = answers.manager_id;
+                db.query(`INSERT INTO employee (first_name, last_name, manager_id) VALUES  (?,?,?,?);`, [enteredFirst_Name, enteredLast_Name, enteredRole, enteredManager_id], function (err, results) {});
+                db.query(`INSERT INTO role (title) VALUES (?)`, [enteredRole], function (err, results) {});
+                setTimeout(() => {
+                    startQuestions();
+                }, 1000);
+            }))
+        
+      });
+    
+  }

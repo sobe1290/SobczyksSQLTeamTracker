@@ -28,6 +28,8 @@ db.connect(function(err) {
     startQuestions();
   });
 
+
+
 export function startQuestions() {
 inquirer
   .prompt(mainMenu)
