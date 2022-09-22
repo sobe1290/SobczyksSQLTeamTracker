@@ -77,31 +77,31 @@ const addDepartmentQuestion = [
     }
 ]
 
-
 const addEmployeeQuestions = [
-  {
-      type:'input',
-      name: 'employee_first_name',
-      message: 'What is this employees first name?',
-  },
-  {
-      type:'input',
-      name: 'employee_last_name',
-      message: 'What is this employees last name?',
-  },
-  {
-      type:'choices',
-      name: 'emp_role',
-      message: 'What is the role of this employee?',
-      choices: roleArray,
-  },
-  {
-      type:'number',
-      name: 'manager_id',
-      message: 'What is id number of the manager for this employee?',
-      
-  }
-]
+    {
+        type:'input',
+        name: 'employee_first_name',
+        message: 'What is this employees first name?',
+    },
+    {
+        type:'input',
+        name: 'employee_last_name',
+        message: 'What is this employees last name?',
+    },
+    {
+        type:'list',
+        name: 'emp_role',
+        message: 'What is the role of this employee?',
+        choices: roleArray,
+    },
+    {
+        type:'number',
+        name: 'manager_id',
+        message: 'What is id number of the manager for this employee?',
+        
+    }
+  ]
+
 
 const updateEmployeeIDQuestions = [
     {
@@ -162,10 +162,11 @@ function nextQuestion (answers) {
       case 'Add Employee':
         db.query('SELECT role.title FROM role;', function (err, results) {                
             results.map((roles) => roleArray.push(roles.title)) 
-            console.log(roleArray)
+            
             return roleArray
           })
-          console.log(roleArray)
+          
+          
 
             inquirer
             .prompt(addEmployeeQuestions)
@@ -186,6 +187,7 @@ function nextQuestion (answers) {
           break;
       case 'Add Role':
           inquirer
+          
               .prompt(addRoleQuestions)
               .then(answers =>{
                   const enteredTitle = answers.role_title;
@@ -232,7 +234,9 @@ function nextQuestion (answers) {
   }
 }
 
-async function getRole () {
+function addInitialization () {
+
+    
         
           
           }
