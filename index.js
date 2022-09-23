@@ -136,7 +136,7 @@ const updateEmployeeIDQuestions = [
 function nextQuestion (answers) {
   switch (answers.Main_Options) {
       case 'View All Employees':
-          db.query(`SELECT employee.id AS Employee_ID, employee.first_name AS First_Name, employee.last_name AS Last_Name, role.title AS Title, department.name AS Department_Name, role.salary AS Salary, CONCAT(manager.first_name, ' ', manager.last_name) AS Manager_Name FROM department LEFT JOIN role ON role.department_id = department.id LEFT JOIN employee ON employee.role_id = role.id LEFT JOIN employee manager ON manager.id = employee.manager_id ORDER BY employee.id;`, function (err, results) {
+          db.query(`SELECT employee.id AS Employee_ID, employee.first_name AS First_Name, employee.last_name AS Last_Name, role.title AS Title, department.name AS Department_Name, role.salary AS Salary, CONCAT(manager.first_name, ' ', manager.last_name) AS Manager_Name FROM employee LEFT JOIN role ON role.id = employee.role_id LEFT JOIN department ON department.id = role.department_id LEFT JOIN employee manager ON manager.id = employee.manager_id ORDER BY employee.id;`, function (err, results) {
               console.table(results);
             });
             setTimeout(() => {
