@@ -174,16 +174,10 @@ function nextQuestion (answers) {
             const enteredManager_id = answers.manager_id;
             db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES  (?,?,?,?);`, [enteredFirst_Name, enteredLast_Name, enteredRole, enteredManager_id], function (err, results) {
             });
-            // db.query(`INSERT INTO role (id) VALUES (?);`, [enteredRole], function (err, results) {
-            //     console.log(results)
-            // });
             setTimeout(() => {
                 startQuestions();
             }, 1000);
-        })
-        
-          
-        
+        })          
           break;
       case 'Add Role':
           inquirer
