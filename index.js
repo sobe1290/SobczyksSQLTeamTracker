@@ -41,6 +41,7 @@ inquirer
   
 //This part below are the questions for inquirer  
 const roleTitleAndIdArray = [];
+const allEmployeesArray= [];
 
 const mainMenu = [
     {
@@ -95,9 +96,10 @@ const addEmployeeQuestions = [
         choices: roleTitleAndIdArray,
     },
     {
-        type:'number',
+        type:'list',
         name: 'manager_id',
-        message: 'What is id number of the manager for this employee?',
+        message: 'What who is the manager for this employee?',
+        choices: allEmployeesArray,
         
     }
     
@@ -165,6 +167,10 @@ function nextQuestion (answers) {
             results.map((roles) => roleTitleAndIdArray.push({name: roles.title, value: roles.id}))           
             return {roleTitleAndIdArray}
           })   
+        db.query('SELECT * FROM employee;', function (err, results){
+            results.map((employee) => allEmployeesArray.push({name: employee.last_name, value: employee.id}))
+            return {allEmployeesArray}
+        })
         inquirer
         .prompt(addEmployeeQuestions)
         .then(answers =>{
