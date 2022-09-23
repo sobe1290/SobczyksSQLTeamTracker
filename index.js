@@ -212,26 +212,26 @@ function nextQuestion (answers) {
                   });
           
           break;
-      case 'Update Employee Role':
+      case 'Update Employee Role': //Try adding async/await to see if that fixes this problem, array coming up empty to inquirer
         db.query('SELECT * FROM employee;', function (err, results){
-            results.map((employee) => employeeArrayForUpdate.push({name: employee.last_name, value: employee.id}))
+            results.map((employees) => employeeArrayForUpdate.push({name: employees.last_name, value: employees.id}))
             return employeeArrayForUpdate
         })
         db.query('SELECT * FROM role;', function (err, results) {               
             results.map((roles) => updateRoleArray.push({name: roles.title, value: roles.id}))           
             return updateRoleArray
-          })   
-          inquirer
-          .prompt(updateEmployeeIDQuestions)
-          .then(answers => {         
-              const EmployeeToEdit = answers.selected_update_id;
-              const enteredUpRole_id = answers.role_id; 
-              db.query(`UPDATE employee SET role_id=? WHERE employee.id=?;`, [enteredUpRole_id, EmployeeToEdit], function (err, results) {
-              });
-              setTimeout(() => {
-                startQuestions();
-              }, 1000);
-              });
+        })   
+        inquirer
+        .prompt(updateEmployeeIDQuestions)
+        .then(answers => {         
+            const employeeToEdit = answers.selected_update_id;
+            const enteredUpRole_id = answers.role_id; 
+            db.query(`UPDATE employee SET role_id=? WHERE id=?;`, [enteredUpRole_id, employeeToEdit], function (err, results) {
+            });
+            setTimeout(() => {
+            startQuestions();
+            }, 1000);
+            });
           break;
       case 'All done, Exit':
           console.log('Thanks for using my application!')
