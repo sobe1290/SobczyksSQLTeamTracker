@@ -39,10 +39,15 @@ inquirer
     );
   };
   
-//This part below are the questions for inquirer  
+//These are array placeholders that will hold values called from the SQL DB
 const roleTitleAndIdArray = [];
-const allEmployeesArray= [];
+const allEmployeesArray = [];
+const allDepartments = [];
+const employeeArrayForUpdate = [];
+const updateRoleArray = [];
 
+
+//This part below are the questions for inquirer  
 const mainMenu = [
     {
         type:'list',
@@ -64,9 +69,10 @@ const addRoleQuestions = [
         message: 'What is the salary of this role?'
     },
     {
-        type:'number',
+        type:'list',
         name: 'department_id',
-        message: 'What is the department id of this role?'
+        message: 'To what department does this role belong?',
+        choices: allDepartments,
     }
 ]
 
@@ -108,30 +114,19 @@ const addEmployeeQuestions = [
 
 const updateEmployeeIDQuestions = [
     {
-        type: 'number',
+        type:'list',
         name: 'selected_update_id',
-        message: 'What is the id number of the employee whose role you wish to update?'
+        message: 'Which employees role do you want to change?',
+        choices: employeeArrayForUpdate,
     },
     {
-        type:'number',
+        type:'list',
         name: 'role_id',
-        message: 'What is the role id number of this employee?'
+        message: 'Choose a role for this employee.',
+        choices: updateRoleArray,
     },
-    {
-        type:'input',
-        name: 'employee_first_name',
-        message: 'What is this employees first name?',
-    },
-    {
-        type:'input',
-        name: 'employee_last_name',
-        message: 'What is this employees last name?'
-    },
-    {
-        type:'number',
-        name: 'manager_id',
-        message: 'What is id number of the manager for this employee?'
-    }
+    
+    
 ]
 
 //This is switch case which contains what do do based on the selection from the main menu
@@ -165,11 +160,11 @@ function nextQuestion (answers) {
       case 'Add Employee':
         db.query('SELECT * FROM role;', function (err, results) {               
             results.map((roles) => roleTitleAndIdArray.push({name: roles.title, value: roles.id}))           
-            return {roleTitleAndIdArray}
+            return roleTitleAndIdArray
           })   
         db.query('SELECT * FROM employee;', function (err, results){
             results.map((employee) => allEmployeesArray.push({name: employee.last_name, value: employee.id}))
-            return {allEmployeesArray}
+            return allEmployeesArray
         })
         inquirer
         .prompt(addEmployeeQuestions)
@@ -186,8 +181,11 @@ function nextQuestion (answers) {
         })          
           break;
       case 'Add Role':
+        db.query('SELECT * FROM department;', function (err, results){
+            results.map((department) => allDepartments.push({name: department.name, value: department.id}))
+            return allDepartments
+        })
           inquirer
-          
               .prompt(addRoleQuestions)
               .then(answers =>{
                   const enteredTitle = answers.role_title;
@@ -215,17 +213,24 @@ function nextQuestion (answers) {
           
           break;
       case 'Update Employee Role':
+        db.query('SELECT * FROM employee;', function (err, results){
+            results.map((employee) => employeeArrayForUpdate.push({name: employee.last_name, value: employee.id}))
+            return employeeArrayForUpdate
+        })
+        db.query('SELECT * FROM role;', function (err, results) {               
+            results.map((roles) => updateRoleArray.push({name: roles.title, value: roles.id}))           
+            return updateRoleArray
+          })   
           inquirer
           .prompt(updateEmployeeIDQuestions)
-          .then(answers =>{
-              const enteredUpFirst_Name = answers.employee_first_name;
-              const enteredUpLast_Name = answers.employee_last_name;
-              const enteredUpRole_id = answers.role_id;
-              const enteredUpManager_id = answers.manager_id;
+          .then(answers => {         
               const EmployeeToEdit = answers.selected_update_id;
-              db.query(`UPDATE employee SET first_name=?, last_name=?, role_id=?, manager_id=? WHERE employee.id=?;`, [enteredUpFirst_Name, enteredUpLast_Name, enteredUpRole_id, enteredUpManager_id, EmployeeToEdit], function (err, results) {
+              const enteredUpRole_id = answers.role_id; 
+              db.query(`UPDATE employee SET role_id=? WHERE employee.id=?;`, [enteredUpRole_id, EmployeeToEdit], function (err, results) {
               });
-              startQuestions();
+              setTimeout(() => {
+                startQuestions();
+              }, 1000);
               });
           break;
       case 'All done, Exit':
