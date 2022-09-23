@@ -40,7 +40,7 @@ inquirer
   };
   
 //This part below are the questions for inquirer  
-const roleArray = [];
+const roleTitleAndIdArray = [];
 
 const mainMenu = [
     {
@@ -92,7 +92,7 @@ const addEmployeeQuestions = [
         type:'list',
         name: 'emp_role',
         message: 'What is the role of this employee?',
-        choices: roleArray,
+        choices: roleTitleAndIdArray,
     },
     {
         type:'number',
@@ -100,6 +100,7 @@ const addEmployeeQuestions = [
         message: 'What is id number of the manager for this employee?',
         
     }
+    
   ]
 
 
@@ -160,9 +161,9 @@ function nextQuestion (answers) {
           }, 1000);
           break;
       case 'Add Employee':
-        db.query('SELECT role.title FROM role;', function (err, results) {                
-            results.map((roles) => roleArray.push(roles.title))             
-            return roleArray
+        db.query('SELECT * FROM role;', function (err, results) {               
+            results.map((roles) => roleTitleAndIdArray.push({name: roles.title, value: roles.id}))           
+            return {roleTitleAndIdArray}
           })   
         inquirer
         .prompt(addEmployeeQuestions)
@@ -171,12 +172,11 @@ function nextQuestion (answers) {
             const enteredLast_Name = answers.employee_last_name;
             const enteredRole = answers.emp_role;
             const enteredManager_id = answers.manager_id;
-            db.query(`INSERT INTO employee (first_name, last_name, manager_id) VALUES  (?,?,?);`, [enteredFirst_Name, enteredLast_Name, enteredManager_id], function (err, results) {
-                console.log(results)
+            db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES  (?,?,?,?);`, [enteredFirst_Name, enteredLast_Name, enteredRole, enteredManager_id], function (err, results) {
             });
-            db.query(`INSERT INTO role (title) VALUES (?);`, [enteredRole], function (err, results) {
-                console.log(results)
-            });
+            // db.query(`INSERT INTO role (id) VALUES (?);`, [enteredRole], function (err, results) {
+            //     console.log(results)
+            // });
             setTimeout(() => {
                 startQuestions();
             }, 1000);
