@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
+const cTable = require('console.table');
 
 
 // This part sets up the connection
@@ -55,7 +56,7 @@ const mainMenu = [
         message:'What would you like to do?',
         choices:['View All Employees', 'View All Roles', 'View All Departments', 'Add Employee', 'Add Role', 'Add Department', 'Update Employee Role', 'All done, Exit']
     },
-]
+];
 
 const addRoleQuestions = [
     {
@@ -74,7 +75,7 @@ const addRoleQuestions = [
         message: 'To what department does this role belong?',
         choices: allDepartments,
     }
-]
+];
 
 const addDepartmentQuestion = [
     {
@@ -82,7 +83,7 @@ const addDepartmentQuestion = [
         name: 'department_name',
         message: 'What is the name of this Department?',
     }
-]
+];
 
 const addEmployeeQuestions = [
     {
@@ -107,9 +108,8 @@ const addEmployeeQuestions = [
         message: 'What who is the manager for this employee?',
         choices: allEmployeesArray,
         
-    }
-    
-  ]
+    }    
+];
 
 
 const updateEmployeeIDQuestions = [
@@ -124,46 +124,44 @@ const updateEmployeeIDQuestions = [
         name: 'role_id',
         message: 'Choose a role for this employee.',
         choices: updateRoleArray,
-    },
-    
-    
-]
+    },   
+];
 
 //This is switch case which contains what do do based on the selection from the main menu
 
 function nextQuestion (answers) {
   switch (answers.Main_Options) {
       case 'View All Employees':
-          db.query(`SELECT employee.id AS Employee_ID, employee.first_name AS First_Name, employee.last_name AS Last_Name, role.title AS Title, department.name AS Department_Name, role.salary AS Salary, CONCAT(manager.first_name, ' ', manager.last_name) AS Manager_Name FROM employee LEFT JOIN role ON role.id = employee.role_id LEFT JOIN department ON department.id = role.department_id LEFT JOIN employee manager ON manager.id = employee.manager_id ORDER BY employee.id;`, function (err, results) {
-              console.table(results);
-            });
-            setTimeout(() => {
-              startQuestions();
-          }, 1000);
+        db.query(`SELECT employee.id AS Employee_ID, employee.first_name AS First_Name, employee.last_name AS Last_Name, role.title AS Title, department.name AS Department_Name, role.salary AS Salary, CONCAT(manager.first_name, ' ', manager.last_name) AS Manager_Name FROM employee LEFT JOIN role ON role.id = employee.role_id LEFT JOIN department ON department.id = role.department_id LEFT JOIN employee manager ON manager.id = employee.manager_id ORDER BY employee.id;`, function (err, results) {
+            console.table(results);
+        });
+        setTimeout(() => {
+            startQuestions();
+        }, 1000);
           break;
       case 'View All Roles':
-          db.query('SELECT role.title, role.id, department.name, role.salary FROM role JOIN department ON role.department_id = department.id ORDER BY id;', function (err, results) {
-              console.table(results);
-            });
-            setTimeout(() => {
-              startQuestions();
-          }, 1000);
+        db.query('SELECT role.title, role.id, department.name, role.salary FROM role JOIN department ON role.department_id = department.id ORDER BY id;', function (err, results) {
+            console.table(results);
+        });
+        setTimeout(() => {
+            startQuestions();
+        }, 1000);
           break;
       case 'View All Departments':
-          db.query('SELECT * FROM department;', function (err, results) {
-              console.table(results);
-            });
-            setTimeout(() => {
-              startQuestions();
-          }, 1000);
+        db.query('SELECT * FROM department;', function (err, results) {
+            console.table(results);
+        });
+        setTimeout(() => {
+            startQuestions();
+        }, 1000);
           break;
       case 'Add Employee':
         db.query('SELECT * FROM role;', function (err, results) {               
-            results.map((roles) => roleTitleAndIdArray.push({name: roles.title, value: roles.id}))           
-          })   
-        db.query('SELECT * FROM employee;', function (err, results){
-            results.map((employee) => allEmployeesArray.push({name: employee.last_name, value: employee.id}))
-        })
+            results.map((roles) => roleTitleAndIdArray.push({name: roles.title, value: roles.id}));           
+        }); 
+        db.query(`SELECT employee.id, CONCAT(employee.first_name, ' ', employee.last_name) AS concat_name FROM employee;`, function (err, results){
+            results.map((employee) => allEmployeesArray.push({name: employee.concat_name, value: employee.id}));
+        });
         inquirer
         .prompt(addEmployeeQuestions)
         .then(answers =>{
@@ -180,57 +178,54 @@ function nextQuestion (answers) {
           break;
       case 'Add Role':
         db.query('SELECT * FROM department;', function (err, results){
-            results.map((department) => allDepartments.push({name: department.name, value: department.id}))
-        })
+            results.map((department) => allDepartments.push({name: department.name, value: department.id}));
+        });
           inquirer
               .prompt(addRoleQuestions)
               .then(answers =>{
                   const enteredTitle = answers.role_title;
                   const enteredSalary = answers.role_salary;
                   const enteredDepartment_id = answers.department_id;
-                  db.query(`INSERT INTO role (title, salary, department_id) VALUES  (?,?,?);`, [enteredTitle, enteredSalary, enteredDepartment_id], function (err, results) {
-                  });
+                  db.query(`INSERT INTO role (title, salary, department_id) VALUES  (?,?,?);`, [enteredTitle, enteredSalary, enteredDepartment_id], function (err, results) {});
                   setTimeout(() => {
                       startQuestions();
                   }, 1000);
               });
           break;
       case 'Add Department':
-          inquirer
-              .prompt(addDepartmentQuestion)
-              .then(answers =>{
-                  const enteredDeptName = answers.department_name
-                  db.query(`INSERT INTO department (name) VALUES  (?);`, [enteredDeptName], function (err, results) {
-                  });
-                  setTimeout(() => {
-                      startQuestions();
-                  }, 1000);
-                  });
+        inquirer
+            .prompt(addDepartmentQuestion)
+            .then(answers =>{
+                const enteredDeptName = answers.department_name
+                db.query(`INSERT INTO department (name) VALUES  (?);`, [enteredDeptName], function (err, results) {});
+                setTimeout(() => {
+                    startQuestions();
+                }, 1000);
+                });
           
           break;
-      case 'Update Employee Role': //Try adding async/await to see if that fixes this problem, array coming up empty to inquirer
-        db.query('SELECT * FROM employee;', function (err, results){
-            results.map((employees) => employeeArrayForUpdate.push({name: employees.last_name, value: employees.id}))
-        }) 
+      case 'Update Employee Role':
+        db.query(`SELECT employee.id, CONCAT(employee.first_name, ' ', employee.last_name) AS concat_name FROM employee;`, function (err, results){
+            results.map((employees) => employeeArrayForUpdate.push({name: employees.concat_name, value: employees.id}));
+        });
         db.query('SELECT * FROM role;', function (err, results) {               
-            results.map((roles) => updateRoleArray.push({name: roles.title, value: roles.id}))           
-        }) 
+            results.map((roles) => updateRoleArray.push({name: roles.title, value: roles.id}));           
+        }); 
         setTimeout(() => {
             inquirer
             .prompt(updateEmployeeIDQuestions)
             .then(answers => {         
                 const employeeToEdit = answers.selected_update_id;
                 const enteredUpRole_id = answers.role_id; 
-                db.query(`UPDATE employee SET role_id=? WHERE id=?;`, [enteredUpRole_id, employeeToEdit], function (err, results) {
-                });
+                db.query(`UPDATE employee SET role_id=? WHERE id=?;`, [enteredUpRole_id, employeeToEdit], function (err, results) {});
                 setTimeout(() => {
-                startQuestions();
+                    startQuestions();
                 }, 1000);
                 });
         }, 1000);
           break;
       case 'All done, Exit':
-          console.log('Thanks for using my application!')
+        console.log('Thanks for using my application!')
           break;
-  }
-}
+  };
+};
