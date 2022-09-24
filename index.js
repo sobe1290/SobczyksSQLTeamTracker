@@ -160,11 +160,9 @@ function nextQuestion (answers) {
       case 'Add Employee':
         db.query('SELECT * FROM role;', function (err, results) {               
             results.map((roles) => roleTitleAndIdArray.push({name: roles.title, value: roles.id}))           
-            return roleTitleAndIdArray
           })   
         db.query('SELECT * FROM employee;', function (err, results){
             results.map((employee) => allEmployeesArray.push({name: employee.last_name, value: employee.id}))
-            return allEmployeesArray
         })
         inquirer
         .prompt(addEmployeeQuestions)
@@ -183,7 +181,6 @@ function nextQuestion (answers) {
       case 'Add Role':
         db.query('SELECT * FROM department;', function (err, results){
             results.map((department) => allDepartments.push({name: department.name, value: department.id}))
-            return allDepartments
         })
           inquirer
               .prompt(addRoleQuestions)
@@ -197,7 +194,6 @@ function nextQuestion (answers) {
                       startQuestions();
                   }, 1000);
               });
-          
           break;
       case 'Add Department':
           inquirer
@@ -215,29 +211,26 @@ function nextQuestion (answers) {
       case 'Update Employee Role': //Try adding async/await to see if that fixes this problem, array coming up empty to inquirer
         db.query('SELECT * FROM employee;', function (err, results){
             results.map((employees) => employeeArrayForUpdate.push({name: employees.last_name, value: employees.id}))
-            return employeeArrayForUpdate
-        })
+        }) 
         db.query('SELECT * FROM role;', function (err, results) {               
             results.map((roles) => updateRoleArray.push({name: roles.title, value: roles.id}))           
-            return updateRoleArray
-        })   
-        inquirer
-        .prompt(updateEmployeeIDQuestions)
-        .then(answers => {         
-            const employeeToEdit = answers.selected_update_id;
-            const enteredUpRole_id = answers.role_id; 
-            db.query(`UPDATE employee SET role_id=? WHERE id=?;`, [enteredUpRole_id, employeeToEdit], function (err, results) {
-            });
-            setTimeout(() => {
-            startQuestions();
-            }, 1000);
-            });
+        }) 
+        setTimeout(() => {
+            inquirer
+            .prompt(updateEmployeeIDQuestions)
+            .then(answers => {         
+                const employeeToEdit = answers.selected_update_id;
+                const enteredUpRole_id = answers.role_id; 
+                db.query(`UPDATE employee SET role_id=? WHERE id=?;`, [enteredUpRole_id, employeeToEdit], function (err, results) {
+                });
+                setTimeout(() => {
+                startQuestions();
+                }, 1000);
+                });
+        }, 1000);
           break;
       case 'All done, Exit':
           console.log('Thanks for using my application!')
           break;
   }
 }
-
-
-
