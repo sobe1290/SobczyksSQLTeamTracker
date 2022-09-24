@@ -77,4 +77,4 @@
 
   Below is a screenshot of the start screen.
   
-  
+  ![Screenshot](https://user-images.githubusercontent.com/26222624/192078095-b14f740e-47ac-4d50-8579-1368f9be67c4.jpg)
